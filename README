@@ -1,0 +1,4 @@
+number_to_numeral
+=================
+
+NumberToNumeral.new("1234").to_s => "one thousand thirty-four"
