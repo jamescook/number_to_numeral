@@ -1,5 +1,11 @@
 
 describe NumberToNumeral do
+  context "given '1,234.98'" do
+    it "should convert to 'one thousand, two hundred thirty-four and ninety-eight" do
+      NumberToNumeral.new("1,234.98").to_s.should == "one thousand two hundred thirty-four and ninety-eight"
+    end
+  end
+
   context "given '1,234'" do
     it "should convert to 'one thousand, two hundred thirty-four" do
       NumberToNumeral.new("1,234").to_s.should == "one thousand two hundred thirty-four"
@@ -21,6 +27,12 @@ describe NumberToNumeral do
   context "given '100'" do
     it "should convert to 'one hundred'" do
       NumberToNumeral.new("100").to_s.should == "one hundred"
+    end
+  end
+
+  context "given '101'" do
+    it "should convert to 'one hundred one'" do
+      NumberToNumeral.new("101").to_s.should == "one hundred one"
     end
   end
 

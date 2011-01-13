@@ -9,6 +9,14 @@ class NumberToNumeral
     @phrase = nil
   end
 
+  def use_dollars!
+    @use_dollars = true
+  end
+
+  def use_dollars?
+    @use_dollars == true
+  end
+
   def groups
     { 1 => "hundred", 2 => "thousand", 3 => "million", 4 => "billion", 5 => "trillion"}.freeze
   end
@@ -80,7 +88,7 @@ class NumberToNumeral
 
       if triplet.size == 3
         unless triplet[0].to_s == "0"
-          @phrase << units[ triplet[0].to_s] + " hundred"
+          @phrase << units[ triplet[0].to_s] + " #{groups[1]}"
         end
 
         unless triplet[1..2].to_s.to_i.zero?
@@ -90,7 +98,7 @@ class NumberToNumeral
             if triplet[1..2].to_s.to_i.between?(10, 19)
               @phrase << teens[ triplet[1..2].to_s]
             elsif triplet[1..2].to_s.to_i.between?(1, 9)
-              @phrase << units[ triplet[1..2].to_s.to_i.to_s] # HAHHAHAHAHAHAHA take that leading zero
+              @phrase << units[ triplet[1..2].to_s.to_i.to_s]
             else
               @phrase << (tens[ triplet[1].to_s] + "-" + units[ triplet[2].to_s] )
             end
@@ -110,11 +118,13 @@ class NumberToNumeral
     end
 
     @phrase = @phrase.join(" ")
+    if use_dollars?
+      @phrase += " dollars"
+    end
     append_cents_text
     phrase.strip
   end
 
-  #TODO incomplete
   def append_cents_text
     if cents
       if cents.to_i.between? 0,9
@@ -137,7 +147,15 @@ class NumberToNumeral
       if mode == :teens
         cents_to_word = teens[_cents.to_s]
       end
-      @phrase << " and #{cents_to_word} cents"
+
+      if mode == :tens
+        cents_to_word = tens[_cents[0].to_s] + "-" + units[_cents.last]
+      end
+      @phrase << " and #{cents_to_word}"
+
+      @phrase << " cents" if use_dollars?
+
+      @phrase
     end
   end
 
